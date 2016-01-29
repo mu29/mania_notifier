@@ -5,10 +5,12 @@ import urllib
 import urllib2
 from bs4 import BeautifulSoup
 from config import *
+from notifier import *
 from item import *
 
 class Observer:
     def __init__(self):
+        self.notifier = Notifier()
         self.login_url = 'https://www.itemmania.com/portal/user/login_form_ok.php'
         self.search_url = 'http://trade.itemmania.com/sell/list_search.html'
         self.view_url = 'http://trade.itemmania.com/sell/view.html?id='
@@ -55,4 +57,5 @@ class Observer:
             for key in KEYWORD:
                 if item.title.find(key) > 0:
                     if item.price < LOWER_THAN or item.price > HIGHER_THAN:
-                        print item.title, item.price, item.link
+                        print item
+                        self.notifier.send_noti(item)
