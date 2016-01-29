@@ -7,4 +7,4 @@ observer = Observer()
 
 while True:
     observer.get_items()
-    time.sleep(10)
+    time.sleep(60)
