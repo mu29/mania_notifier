@@ -57,5 +57,4 @@ class Observer:
             for key in KEYWORD:
                 if item.title.find(key) > 0:
                     if item.price < LOWER_THAN or item.price > HIGHER_THAN:
-                        print item
                         self.notifier.send_noti(item)
