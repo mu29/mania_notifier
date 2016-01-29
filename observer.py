@@ -1,14 +1,17 @@
 #-*- coding: utf-8 -*-
 
+import re
 import urllib
 import urllib2
-from config import *
 from bs4 import BeautifulSoup
+from config import *
+from item import *
 
 class Observer:
     def __init__(self):
         self.login_url = 'https://www.itemmania.com/portal/user/login_form_ok.php'
         self.search_url = 'http://trade.itemmania.com/sell/list_search.html'
+        self.view_url = 'http://trade.itemmania.com/sell/view.html?id='
         self.cookie = self.generate_cookie()
 
     def generate_cookie(self):
@@ -42,4 +45,7 @@ class Observer:
         result = soup.find_all('tbody', { 'class' : 'list_search_body' })[1]
 
         for item in result.find_all('tr'):
-            print item.find('div', { 'class' : 'trade_title' }).text
+            title = item.find('div', { 'class' : 'trade_title' }).text
+            amount = item.find('td', { 'class' : 's_right g_red1' }).text
+            amount = int(re.search('([0-9,])+', amount).group(0).replace(',', ''))
+            link = self.view_url + item.find('a')['onclick'].split("'")[1]
