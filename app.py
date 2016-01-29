@@ -1,4 +1,9 @@
+#-*- coding: utf-8 -*-
+
 from observer import *
 
 observer = Observer()
-observer.get_items()
+
+while True:
+    observer.get_items()
+    time.sleep(10)
