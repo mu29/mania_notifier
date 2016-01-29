@@ -12,6 +12,9 @@ class Observer
   # end
 
   def self.run
+    p self.default_cookies
+    response = self.get('http://trade.itemmania.com/sell/list.html', query: generate_queries, debug_output: $stdout)
+    p response.body
   end
 
   def self.generate_cookies
@@ -23,6 +26,10 @@ class Observer
           })
 
     self.default_cookies.add_cookies(response.headers["set-cookie"])
+  end
+
+  def self.generate_queries
+    { search_type: 'sell', search_game: 138, search_server: 658, search_goods: 'item' }
   end
 end
 
