@@ -45,7 +45,14 @@ class Observer:
         result = soup.find_all('tbody', { 'class' : 'list_search_body' })[1]
 
         for item in result.find_all('tr'):
-            title = item.find('div', { 'class' : 'trade_title' }).text
-            amount = item.find('td', { 'class' : 's_right g_red1' }).text
-            amount = int(re.search('([0-9,])+', amount).group(0).replace(',', ''))
+            title = item.find('div', { 'class' : 'trade_title' }).text.strip()
+            price = item.find('td', { 'class' : 's_right g_red1' }).text
+            price = int(re.search('([0-9,])+', price).group(0).replace(',', ''))
             link = self.view_url + item.find('a')['onclick'].split("'")[1]
+
+            item = Item(title, price, link)
+
+            for key in KEYWORD:
+                if item.title.find(key) > 0:
+                    if item.price < LOWER_THAN or item.price > HIGHER_THAN:
+                        print item.title, item.price, item.link
