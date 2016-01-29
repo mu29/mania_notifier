@@ -44,6 +44,7 @@ class Observer:
         soup = self.get_soup(self.search_url)
 
         # 0번 리스트는 프리미엄 목록이니까 빼자
+        inventory = []
         result = soup.find_all('tbody', { 'class' : 'list_search_body' })[1]
 
         for item in result.find_all('tr'):
@@ -54,7 +55,14 @@ class Observer:
 
             item = Item(title, price, link)
 
-            for key in KEYWORD:
-                if item.title.find(key) > 0:
-                    if item.price < LOWER_THAN or item.price > HIGHER_THAN:
-                        self.notifier.send_noti(item)
+            # 블랙 리스트
+            if any(black in item.title for black in BLACK_LIST):
+                continue
+
+            # 키워드
+            if any(key in item.title for key in KEYWORD):
+                if item.price < LOWER_THAN or item.price > HIGHER_THAN:
+                    inventory.append(item)
+
+        inventory = list(set(inventory))
+        self.notifier.send_noti(inventory)
