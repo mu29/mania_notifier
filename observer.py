@@ -49,9 +49,15 @@ class Observer:
 
         for item in result.find_all('tr'):
             title = item.find('div', { 'class' : 'trade_title' }).text.strip()
-            price = item.find('td', { 'class' : 's_right g_red1' }).text
+            price = item.find('td', { 'class' : 's_right g_red1' })
+            if price is not None:
+                price = price.text
+            else:
+                price = "0"
             price = int(re.search('([0-9,])+', price).group(0).replace(',', ''))
-            link = self.view_url + item.find('a')['onclick'].split("'")[1]
+            link = self.view_url
+            if item.find('a') is not None:
+                link = link + item.find('a')['onclick'].split("'")[1]
 
             item = Item(title, price, link)
 
